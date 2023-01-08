@@ -14,29 +14,42 @@ void Indicator::init() {
 }
 
 void Indicator::checkState() {
-  bool newState = !digitalRead(this->pin);
+  bool newReading = !digitalRead(this->pin);
 
-  // if (this->currentState != newState)
-  // {
-  //   this->currentState = newState;
-  // }
+  if (newReading != this->lastReading)
+  {
+    this->lastDebounceTime = millis();
+  }
 
-  if (newState == false && this->currentState == true && this->zeroCounter < INDICATOR_0_COUNTER_THRESHOLD)
+  if (millis() - this->lastDebounceTime > INDICATOR_DEBOUNCE_DELAY)
   {
-    this->zeroCounter++;
+    if (newReading == false && this->currentState == true && this->zeroCounter < INDICATOR_0_COUNTER_THRESHOLD)
+    {
+      this->zeroCounter++;
+    }
+    else if (newReading == false && this->currentState == true && this->zeroCounter >= INDICATOR_0_COUNTER_THRESHOLD)
+    {
+      this->currentState = newReading;
+      this->zeroCounter = 0;
+    }
+    else if (newReading == true && this->currentState == false)
+    {
+      this->currentState = newReading;
+    }
   }
-  else if (newState == false && this->currentState == true && this->zeroCounter >= INDICATOR_0_COUNTER_THRESHOLD)
-  {
-    this->currentState = newState;
-    this->zeroCounter = 0;
-  }
-  else if (newState == true && this->currentState == false)
-  {
-    this->currentState = newState;
-  }
+
+  this->lastReading = newReading;
 }
 
 bool Indicator::getState()
 {
   return this->currentState;
 }
+
+
+
+
+
+
+
+
