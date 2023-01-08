@@ -1,9 +1,12 @@
+#include "HardwareSerial.h"
 #include <Arduino.h>
 #include "direction.h"
+#include "trackcurrent.h"
 
-Direction::Direction(byte pin)
+Direction::Direction(byte pin, TrackCurrent *trackCurrent)
 {
   this->pin = pin;
+  this->trackCurrent = trackCurrent;
 }
 
 void Direction::init()
@@ -20,18 +23,57 @@ bool Direction::getDirectionState()
 
 void Direction::goForward()
 {
-  this->currentDirectionSate = DIRECTION_FORWARD;
+  this->safeupdateDirection(DIRECTION_FORWARD);
+  Serial.println("direction new: FORWARD");
+  this->onLoop();
 }
 
 void Direction::goBackwords()
 {
-  this->currentDirectionSate = DIRECTION_BACKWARD;
+  this->safeupdateDirection(DIRECTION_BACKWARD);
+  Serial.println("direction new: BACKWARDS");
+  this->onLoop();
+}
+
+void Direction::switchDirection()
+{
+  if (this->currentDirectionSate == DIRECTION_FORWARD)
+  {
+    this->goBackwords();
+  }
+  else if (this->currentDirectionSate == DIRECTION_BACKWARD)
+  {
+    this->goForward();
+  }
 }
 
 void Direction::onLoop()
 {
   digitalWrite(this->pin, this->currentDirectionSate);
 }
+
+void Direction::safeupdateDirection(bool newDirection)
+{
+  bool hasCurrentlyCurrentOnTrack = this->trackCurrent->hasCurrent();
+
+  this->trackCurrent->downCurrent();
+
+  this->currentDirectionSate = newDirection;
+
+  // only power the track again when it was already turned on before the direction change.
+  if (hasCurrentlyCurrentOnTrack == true)
+  {
+      this->trackCurrent->upCurrentAfterDelay(DIRECTION_CHANGE_SAFE_DELAY);
+  }
+}
+
+
+
+
+
+
+
+
 
 
 

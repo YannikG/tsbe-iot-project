@@ -32,3 +32,7 @@
 #ifndef OUT_DIRECTION_SWITCH
   #define OUT_DIRECTION_SWITCH 8
 #endif
+
+#ifndef STATION_WAIT_TIME
+  #define STATION_WAIT_TIME 2000
+#endif
