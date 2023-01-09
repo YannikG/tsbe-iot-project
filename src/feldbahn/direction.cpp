@@ -7,6 +7,7 @@ Direction::Direction(byte pin, TrackCurrent *trackCurrent)
 {
   this->pin = pin;
   this->trackCurrent = trackCurrent;
+  this->init();
 }
 
 // init the pin.

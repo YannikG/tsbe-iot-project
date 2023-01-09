@@ -1,11 +1,11 @@
 // describe what signal should be sent when the direction of travel is FORWARD.
 #ifndef DIRECTION_FORWARD
-  #define DIRECTION_FORWARD 1
+  #define DIRECTION_FORWARD 0
 #endif
 
 // describe what signal should be sent when the direction of travel is BACKWARDS.
 #ifndef DIRECTION_BACKWARD
-  #define DIRECTION_BACKWARD 0
+  #define DIRECTION_BACKWARD 1
 #endif
 
 // set a safe delay to turn the track current back on after a direction change.

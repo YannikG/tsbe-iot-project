@@ -7,7 +7,7 @@
 
 // debounce in ms.
 #ifndef INDICATOR_DEBOUNCE_DELAY
-  #define INDICATOR_DEBOUNCE_DELAY 50
+  #define INDICATOR_DEBOUNCE_DELAY 200
 #endif
 
 #pragma once
