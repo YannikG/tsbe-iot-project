@@ -33,6 +33,7 @@
   #define OUT_DIRECTION_SWITCH 8
 #endif
 
+// Station waittime.
 #ifndef STATION_WAIT_TIME
   #define STATION_WAIT_TIME 4000
 #endif

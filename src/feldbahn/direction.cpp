@@ -9,6 +9,7 @@ Direction::Direction(byte pin, TrackCurrent *trackCurrent)
   this->trackCurrent = trackCurrent;
 }
 
+// init the pin.
 void Direction::init()
 {
   pinMode(this->pin, OUTPUT);
@@ -16,30 +17,34 @@ void Direction::init()
   this->currentDirectionSate = 0;
 }
 
+// get the current direction state.
 bool Direction::getDirectionState()
 {
   return this->currentDirectionSate;
 }
 
+// switch the direction to forward
 void Direction::goForward()
 {
-  this->safeupdateDirection(DIRECTION_FORWARD);
+  this->safeUpdateDirection(DIRECTION_FORWARD);
   Serial.println("direction new: FORWARD");
   this->onLoop();
 }
 
-void Direction::goBackwords()
+// switch the direction to backwards
+void Direction::goBackwards()
 {
-  this->safeupdateDirection(DIRECTION_BACKWARD);
+  this->safeUpdateDirection(DIRECTION_BACKWARD);
   Serial.println("direction new: BACKWARDS");
   this->onLoop();
 }
 
+// switch the direction according to the current direction of travel.
 void Direction::switchDirection()
 {
   if (this->currentDirectionSate == DIRECTION_FORWARD)
   {
-    this->goBackwords();
+    this->goBackwards();
   }
   else if (this->currentDirectionSate == DIRECTION_BACKWARD)
   {
@@ -47,23 +52,28 @@ void Direction::switchDirection()
   }
 }
 
+// main logic.
 void Direction::onLoop()
 {
   digitalWrite(this->pin, this->currentDirectionSate);
 }
 
-void Direction::safeupdateDirection(bool newDirection)
+// to avoid any issues with the motor of the locomotive, we apply some safety measurements to prevent any damages.
+void Direction::safeUpdateDirection(bool newDirection)
 {
   bool hasCurrentlyCurrentOnTrack = this->trackCurrent->hasCurrent();
 
+  // before we switch the direction, we turn the track current down.
   this->trackCurrent->downCurrent();
 
+  // change the direction.
   this->currentDirectionSate = newDirection;
 
   // only power the track again when it was already turned on before the direction change.
   if (hasCurrentlyCurrentOnTrack == true)
   {
-      this->trackCurrent->upCurrentAfterDelay(DIRECTION_CHANGE_SAFE_DELAY);
+    // turn the track current back on after a safe delay.
+    this->trackCurrent->upCurrentAfterDelay(DIRECTION_CHANGE_SAFE_DELAY);
   }
 }
 

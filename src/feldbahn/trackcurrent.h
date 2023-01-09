@@ -1,9 +1,12 @@
 #include <Arduino.h>
 #include "led.h"
 
+// describe what signal should be sent when the track current is ON.
 #ifndef TRACK_CURRENT_ON
   #define TRACK_CURRENT_ON 1
 #endif
+
+// describe what signal should be sent when the track current is OFF.
 #ifndef TRACK_CURRENT_OFF
   #define TRACK_CURRENT_OFF 0
 #endif

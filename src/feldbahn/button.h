@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+// set the debounce value for buttons.
 #ifndef BUTTON_DEBOUNCE_DELAY
   #define BUTTON_DEBOUNCE_DELAY 400
 #endif
