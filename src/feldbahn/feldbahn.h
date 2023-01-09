@@ -34,5 +34,5 @@
 #endif
 
 #ifndef STATION_WAIT_TIME
-  #define STATION_WAIT_TIME 2000
+  #define STATION_WAIT_TIME 4000
 #endif

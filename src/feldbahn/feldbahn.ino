@@ -86,18 +86,17 @@ void updateDirectionOnButtonClick()
 void updateOnWaypointReached(Waypoint *waypoint, bool *waypointState, bool nextDirection, String stationName)
 {
   bool newWaypointState = waypoint->isOccupied();
-
-  if (hasStateChanged(newWaypointState, *waypointState))
+  bool &currentWaypointState = *waypointState;
+  if (hasStateChanged(newWaypointState, currentWaypointState))
   {
     Serial.print(stationName);
     Serial.print(':');
     if (newWaypointState == true)
     {
-      Serial.println("occupied");
+      Serial.println(" occupied");
 
+      bool wasTrackCurrentOnBeforeSwitch = trackCurrent.hasCurrent();
       trackCurrent.downCurrent();
-      // ugly delay but ...
-      delay(STATION_WAIT_TIME);
       if (nextDirection == DIRECTION_FORWARD)
       {
         direction.goForward();
@@ -106,14 +105,18 @@ void updateOnWaypointReached(Waypoint *waypoint, bool *waypointState, bool nextD
       {
         direction.goBackwords();
       }
-      trackCurrent.upCurrent();
+
+      if (wasTrackCurrentOnBeforeSwitch) 
+      {
+        trackCurrent.upCurrentAfterDelay(STATION_WAIT_TIME);
+      }
     }
     else
     {
-      Serial.println("unoccupied");
+      Serial.println(" unoccupied");
     }
 
-    waypointState = &newWaypointState;
+    *waypointState = newWaypointState;
   }
 }
 

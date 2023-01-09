@@ -35,7 +35,11 @@ void TrackCurrent::upCurrent()
 void TrackCurrent::upCurrentAfterDelay(unsigned long delay)
 {
   this->upAfterDelay = delay;
-  this->upCurrent();
+  Serial.print("track current will be in ");
+  Serial.print(delay / 1000);
+  Serial.println("s: ON");
+  this->currentState = TRACK_CURRENT_ON;
+  this->onLoop();
 }
 
 void TrackCurrent::onLoop()
